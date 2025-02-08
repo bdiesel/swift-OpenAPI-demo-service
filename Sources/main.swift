@@ -44,5 +44,11 @@ let handler = SwiftOpenAPIDemoImpl()
 try handler.registerHandlers(on: transport, serverURL: Servers.Server1.url())
 
 
+// Add Vapor middleware to serve the contents of the Public/ directory.
+app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+
+// Redirect /openapi to openapi.html, which serves the rendered documentation.
+app.get("openapi") { $0.redirect(to: "/openapi.html", redirectType: .permanent) }
+
 // Start the app as you would normally.
 try await app.execute()
